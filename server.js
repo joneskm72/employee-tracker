@@ -1,6 +1,8 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
+const db = require("./db/db");
+const { printTable } = require("console-table-printer");
 const { exit } = require("process");
 
 const connection = mysql.createConnection({
@@ -19,53 +21,29 @@ connection.connect(function(err) {
 function runSearch() {
   inquirer
     .prompt({
-      name: "choice",
-      type: "rawlist",
-      message: "What would you like to do?",
+      name: "main",
+      type: "list",
+      message: "What would you like to work with?",
       choices: [
-        "Add a department",
-        "Add an employee role",
-        "Add an employee",
-        "View a department",
-        "View an employee role",
-        "View an employee",
-        "Update an employee role",
+        "Employees",
+        "Roles",
+        "Departments",
         "Exit"
       ]
     })
     .then(function(answer) {
-      switch (answer.choice) {
-      case "Add a department":
-        addDept();
+      switch (answer.main) {
+      case "Employees":
+        employee_choices();
         break;
-
-      case "Add an employee role":
-        empRole();
+      case "Roles":
+        role_choices();
         break;
-
-      case "Add an employee":
-        addEmp();
+      case "Departments":
+        department_choices();
         break;
-
-      case "View a department":
-        viewDept();
-        break;
-
-      case "View an employee role":
-        viewRole();
-        break;
-
-      case "View an employee":
-        viewEmp();
-        break;
-
-      case "Update an employee role":
-        updateRole();
-        break;
-
-      case "Exit":
+      default:
         exit();
-        break;
       }
     });
 }
