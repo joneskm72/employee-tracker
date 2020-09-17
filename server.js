@@ -48,21 +48,96 @@ function runSearch() {
     });
 }
 
-function addDept() {
+function employee_choices() {
   inquirer
-    .prompt({
-      name: "department",
-      type: "input",
-      message: "What department would you like to add?"
+    .prompt([
+      {
+        name: "employeeMain",
+        type: "list",
+        message: "What would you like to do?",
+        choices: [
+          "Add an employee",
+          "View employees",
+          "Exit"
+        ]
+      }
+    ])
+
+    .then(function (answer) {
+      switch (answer.employeeMain) {
+        case "Add an employee":
+          add_employee();
+          break;
+        case "View employees":
+          view_employees();
+          break;
+        default:
+          exit();
+      }
     })
-    .then(function(choice) {
-      var query = "SELECT dept_id, dept_name FROM department WHERE ?";
-      connection.query(query, { department: answer.department }, function(err, res) {
-        for (var i = 0; i < res.length; i++) {
-          console.log("Department ID: " + res[i].dept_id + " || Department Name: " + res[i].dept_name);
-        }
-        runSearch();
-      });
-    });
 }
+
+function role_choices() {
+  inquirer
+    .prompt([
+      {
+        name: "roleMain",
+        type: "list",
+        message: "What would you like to do?",
+        choices: [
+          "Add a role",
+          "View roles",
+          "Update a role",
+          "Exit"
+        ]
+      }
+    ])
+
+    .then(function (answer) {
+      switch(answer.roleMain) {
+        case "Add a role":
+          add_role();
+          break;
+        case "View roles":
+          view_roles();
+          break;
+        case "Update a role":
+          update_role();
+          break;
+        default:
+          exit();
+      }
+    })
+}
+
+function department_choices() {
+  inquirer
+    .prompt([
+      {
+        name: "departmentMain",
+        type: "list",
+        message: "What would you like to do?",
+        choices: [
+          "Add a department",
+          "View departments",
+          "Exit"
+        ]
+      }
+    ])
+
+    .then(function (answer) {
+      switch(answer.departmentMain) {
+        case "Add a department":
+          add_department();
+          break;
+        case "View departments":
+          view_departments();
+          break;
+        default:
+          exit();
+      }
+    })
+}
+
+
 
