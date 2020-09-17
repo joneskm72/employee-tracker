@@ -42,4 +42,4 @@ class db {
   }
 }
 
-module.exports = new DB(connection);
+module.exports = new db(connection);
