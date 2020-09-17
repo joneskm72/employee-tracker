@@ -136,8 +136,137 @@ function department_choices() {
         default:
           exit();
       }
-    })
+    });
+};
+
+async function add_department() {
+  const departments = await db.findAllDepartments();
+  const departmentOptions = departments.map(({ id, depart_name }) => ({
+    name: dept_name,
+    value: id
+  }));
+
+  inquirer
+  .prompt([
+    {
+      name: "name",
+      type: "input",
+      message: "What is the name of this department?"
+    }
+  ])
+
+  .then(function(answers) {
+    db.createDeptartment(answers.dept_name).then(
+      function (response) {
+        console.log(response);
+        view_departments();
+      });
+  });
+};
+
+async function add_role() {
+  const roles = await db.findAllRoles();
+  const roleOptions = roles.map(({ id, role_title }) => ({
+    name: role_title,
+    value: id
+  }));
+
+  inquirer
+  .prompt([
+    {
+      name: "title",
+      type: "input",
+      message: "What is the title of this role?"
+    },
+    {
+      name: "salary",
+      type: "input",
+      message: "What is the salary for this role?"
+    },
+    {
+      name: "id",
+      type: "list",
+      message: "What is the department ID associated with this position?",
+      choices: departmentOptions
+    }
+  ])
+
+  .then(function(answers) {
+    db.createEmployeeRole(answers.role_title, answers.role_salary, answers.department_id).then(
+      function (response) {
+        console.log(response);
+        view_roles();
+      }
+    )
+  })
 }
 
+async function add_employee() {
+  const roles = await db.findAllRoles();
+  const roleOptions = roles.map(({ id, role_title }) => ({
+    name: role_title,
+    value: id
+  }));
 
+  inquirer
+    .prompt([
+      {
+        name: "first_name",
+        type: "input",
+        message: "Please enter the employee's first name"
+      },
+      {
+        name: "last_name",
+        type: "input",
+        message: "Please enter the employee's last name"
+      },
+      {
+        name: "role_id",
+        type: "list",
+        message: "What is the employee's role?",
+        choices: roleOptions
+      }
+    ])
 
+    .then(function(answers) {
+      db.createEmployee(
+        answers.first_name,
+        answers.last_name,
+        answers.role_id
+      ).then(function (response) {
+        console.log(response);
+        view_employees();
+      });
+    });
+};
+
+function view_employees() {
+  console.log("Here are your employees:");
+  db.findAllEmployees().then(function (response) {
+    printTable(response);
+    main();
+  });
+};
+
+function view_departments() {
+  console.log("Here are your departments:");
+  db.findAllDepartments().then(function (response) {
+    printTable(response);
+    main();
+  });
+};
+
+function view_roles() {
+  console.log("Here are your roles:");
+  db.findAllRoles().then(function (response) {
+    printTable(response);
+    main();
+  });
+};
+
+function exit() {
+  console.log("Thank you for using Employee Tracker!");
+  process.exit()
+}
+
+main();
