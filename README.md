@@ -22,25 +22,17 @@ An application that, using Node and MySQL, allows users to add and view departme
 * Node
 * Inquirer
 
-## Features
-
-
-
 ## How to Use
 
-
+After installing MySQL, Inquirer, and console-table-printer, open the integrated terminal. After opening the terminal, type "node server.js" and press enter. Select the desired action and when finished, select "Exit".
 
 ## Application Demo
 
-
-
-## Application Link
-
-
+[Demo]
 
 ## License
 
-
+ISC
 
 ## Contact
 
