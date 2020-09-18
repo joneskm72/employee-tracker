@@ -3,24 +3,12 @@ const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const db = require("./db/db");
 const { printTable } = require("console-table-printer");
-const { exit } = require("process");
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'Pipsie#12',
-  database: 'company_db'
-});
 
-connection.connect(function(err) {
-  if (err) throw err;
-  runSearch();
-});
 
-function runSearch() {
+function main() {
   inquirer
-    .prompt({
+    .prompt([{
       name: "main",
       type: "list",
       message: "What would you like to work with?",
@@ -30,7 +18,7 @@ function runSearch() {
         "Departments",
         "Exit"
       ]
-    })
+    }])
     .then(function(answer) {
       switch (answer.main) {
       case "Employees":
@@ -42,7 +30,7 @@ function runSearch() {
       case "Departments":
         department_choices();
         break;
-      default:
+      case "Exit":
         exit();
       }
     });
@@ -63,15 +51,15 @@ function employee_choices() {
       }
     ])
 
-    .then(function (answer) {
-      switch (answer.employeeMain) {
+    .then(function (answers) {
+      switch (answers.employeeMain) {
         case "Add an employee":
           add_employee();
           break;
         case "View employees":
           view_employees();
           break;
-        default:
+        case "Exit":
           exit();
       }
     })
@@ -93,8 +81,8 @@ function role_choices() {
       }
     ])
 
-    .then(function (answer) {
-      switch(answer.roleMain) {
+    .then(function (answers) {
+      switch(answers.roleMain) {
         case "Add a role":
           add_role();
           break;
@@ -104,7 +92,7 @@ function role_choices() {
         case "Update a role":
           update_role();
           break;
-        default:
+        case "Exit":
           exit();
       }
     })
@@ -125,15 +113,15 @@ function department_choices() {
       }
     ])
 
-    .then(function (answer) {
-      switch(answer.departmentMain) {
+    .then(function (answers) {
+      switch(answers.departmentMain) {
         case "Add a department":
           add_department();
           break;
         case "View departments":
           view_departments();
           break;
-        default:
+        case "Exit":
           exit();
       }
     });
@@ -141,23 +129,19 @@ function department_choices() {
 
 async function add_department() {
   const departments = await db.findAllDepartments();
-  const departmentOptions = departments.map(({ id, depart_name }) => ({
-    name: dept_name,
-    value: id
-  }));
 
   inquirer
   .prompt([
     {
-      name: "name",
+      name: "dept_name",
       type: "input",
       message: "What is the name of this department?"
     }
   ])
 
   .then(function(answers) {
-    db.createDeptartment(answers.dept_name).then(
-      function (response) {
+    db.createDepartment(answers.dept_name).then(
+      function(response) {
         console.log(response);
         view_departments();
       });
@@ -165,9 +149,9 @@ async function add_department() {
 };
 
 async function add_role() {
-  const roles = await db.findAllRoles();
-  const roleOptions = roles.map(({ id, role_title }) => ({
-    name: role_title,
+  const departments = await db.findAllDepartments();
+  const departmentOptions = departments.map(({ id, dept_name }) => ({
+    name: dept_name,
     value: id
   }));
 
@@ -192,7 +176,7 @@ async function add_role() {
   ])
 
   .then(function(answers) {
-    db.createEmployeeRole(answers.role_title, answers.role_salary, answers.department_id).then(
+    db.createEmployeeRole(answers.title, answers.salary, answers.id).then(
       function (response) {
         console.log(response);
         view_roles();
