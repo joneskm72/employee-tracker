@@ -28,7 +28,7 @@ After installing MySQL, Inquirer, and console-table-printer, open the integrated
 
 ## Application Demo
 
-[Demo]
+[Demo](https://drive.google.com/file/d/1yaVXWyPbRNIyuQZfoj1uwLhCwrhWtiZI/view?usp=sharing)
 
 ## License
 
